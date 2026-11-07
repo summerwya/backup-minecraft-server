@@ -1,0 +1,18 @@
+services:
+    backup:
+        container_name: mc-backup
+        image: mc-backup/summerwya
+        build: .
+        volumes:
+            - ./mc-data:/app/data-folder:ro
+            - ./backup:/app/backups-folder
+        environment:
+            RCON_HOST:
+            RCON_PORT: 25575
+            RCON_BACKUP_MESSAGE: "Performing Automated Server Backup - Please rejoin after 5 minutes"
+        secrets:
+            - rcon_password
+
+secrets:
+    rcon_password:
+        file: ./rcon_password.txt
