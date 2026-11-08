@@ -1,21 +1,27 @@
 services:
     backup:
         container_name: mc-backup
-        image: mc-backup/summerwya
+        # image: mc-backup/summerwya
         build: .
         volumes:
             - ./mc-data:/app/data-folder:ro
-            - ./backup:/app/backups-folder
+            - ./backups:/app/backups-folder
         environment:
-            RCON_HOST: 
+            RCON_HOST: "server"
             RCON_PORT: 25575
-            RCON_BACKUP_MESSAGE: "Performing Automated Server Backup - Please rejoin after 5 minutes"
+            RCON_BACKUP_MESSAGE: "Performing Automated Server Backup - Please rejoin after 5 minutes or so"
+            
+            DOCKER_PROJECT_NAME: "minecraft-server" # Get this from Docker Desktop, it should be the one that parents all of your services
         secrets:
             - rcon_password
-            - docker_compose_file_path
+        networks:
+            - tunnel
 
 secrets:
     rcon_password:
         file: ./rcon_password.txt
-    docker_compose_file_path::
-        file: ./docker_compose_file_path.txt
+
+networks:
+    tunnel:
+        name: cloudflare-tunnel
+        external: true

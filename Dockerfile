@@ -1,9 +1,11 @@
 FROM alpine:3.24.4
 
-RUN apk add --no-cache fish=4.8.1-r1 par2cmdline=1.4.0-r0 7zip=26.01-r0 rcon-cli=1.7.5-r2 docker-cli=29.9.3-r0
+RUN apk add --no-cache fish par2cmdline 7zip rcon-cli docker-cli-compose
 RUN addgroup -S backup && adduser -S backup -G backup
 
 WORKDIR /app
+RUN mkdir -p /var/tmp/mc-backup
+RUN chown -R backup:backup /app /var/tmp/mc-backup
 COPY --chown=backup:backup backup.fish .
 
 USER backup
