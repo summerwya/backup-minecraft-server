@@ -7,12 +7,15 @@ services:
             - ./mc-data:/app/data-folder:ro
             - ./backup:/app/backups-folder
         environment:
-            RCON_HOST:
+            RCON_HOST: 
             RCON_PORT: 25575
             RCON_BACKUP_MESSAGE: "Performing Automated Server Backup - Please rejoin after 5 minutes"
         secrets:
             - rcon_password
+            - docker_compose_file_path
 
 secrets:
     rcon_password:
         file: ./rcon_password.txt
+    docker_compose_file_path::
+        file: ./docker_compose_file_path.txt

@@ -1,10 +1,8 @@
 #SECTION - Global variables and checks
-set RCON_HOST $env[RCON_HOST]
-set RCON_PORT $env[RCON_PORT]
-set RCON_BACKUP_MESSAGE $env[RCON_BACKUP_MESSAGE]
-set RCON_PASSWORD (string trim < cat /run/secrets/rcon_password)
+set RCON_PASSWORD (cat /run/secrets/rcon_password | string trim)
 
 # TODO - verify is alladis is even working.
+# Folders
 set DATA_FOLDER "/app/data-folder"
 set BACKUPS_FOLDER "/app/backups-folder"
 set TEMP_BACKUP_FOLDER "/app/temp-backup-folder" # Gets created
@@ -14,6 +12,7 @@ if test -z "$RCON_HOST" -o -z "$RCON_PORT"
     exit 1
 end
 
+# Test if the data folder and the backup folder actually exists
 if not test -d "$DATA_FOLDER"
     echo "DATA_FOLDER doesn't exist"
     exit 1
@@ -25,12 +24,11 @@ if not test -d "$BACKUPS_FOLDER"
 end
 #!SECTION
 
-# Kick all players
+# Kick all players to turn off the server and yeah
 rcon-cli --host "$RCON_HOST" --port "$RCON_PORT" --password "$RCON_PASSWORD" -- "kick @a $RCON_BACKUP_MESSAGE"
+docker -H host.docker.internal:2573 compose -f "$DOCKER_COMPOSE_FILE" down #REVIEW this takes EVERYTHING down.
 
-#TODO - Write code to somehow execute `docker compose down`
-
-# Copy data folder to a temp folder so the server can immediately start
+#SECTION Copy data folder to a temp folder so the server can immediately start
 mkdir $TEMP_BACKUP_FOLDER
 or begin
     echo "Coudln't create temporary backup folder." >&2
@@ -45,7 +43,8 @@ or begin
 end
 
 #REVIEW - Should the server immediately start or should it wait for 7z to finish...
-#TODO - Write code to somehow execute `docker compose up -d`
+docker -H host.docker.internal:2573 compose -f "$DOCKER_COMPOSE_FILE" up -d
+#!SECTION
 
 #SECTION Create archive and move to backup folder
 #REVIEW - I think the user should be able to set their own compression level, no...?
