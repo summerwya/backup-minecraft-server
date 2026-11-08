@@ -59,8 +59,6 @@ else
     echo -e "\tCopied Data Folder to Temp Folder"
 end
 
-#REVIEW - Should the server immediately start or should it wait for 7z to finish...
-docker -H host.docker.internal:2375 compose -p "$DOCKER_PROJECT_NAME" start $DOCKER_SERVICES  #REVIEW this takes EVERYTHING down.
 if test $status -ne 0
     echo -e "\tWARNING: Couldn't get the server back up." >&2
 else
@@ -69,16 +67,17 @@ end
 #!SECTION
 
 #SECTION Step 3 - Create archive and move to backup folder
-#REVIEW - I think the user should be able to set their own compression level, no...?
 echo "Step 3: Creating 7zip Archive"
 
 cd $TEMP_BACKUP_FOLDER
-7z a -t7z -m0=lzma2 -mx=9 -bsp1 "$DATE_NOW.7z" .
+#REVIEW - I think the user should be able to set their own compression level, no...?
+7z a -t7z -m0=lzma2 -mx=7 -md=32m -mmt=on -mmemuse=1000m -bsp1 "$DATE_NOW.7z" . # Use only 1gb of memory
 if test $status -ne 0
     echo -e "\tFATAL: Failed to create archive!" >&2
     exit 1
 else
     echo -e "\tCreated 7zip archive"
+    docker -H host.docker.internal:2375 compose -p "$DOCKER_PROJECT_NAME" start $DOCKER_SERVICES  #REVIEW this takes EVERYTHING down.
 end
 
 mkdir "$BACKUPS_FOLDER/$DATE_NOW"
