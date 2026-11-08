@@ -4,8 +4,8 @@ services:
         # image: mc-backup/summerwya
         build: .
         volumes:
-            - ./mc-data:/app/data-folder:ro
-            - ./backups:/app/backups-folder
+            - ./mc-data:/app/data-folder:ro # this is the folder where server.properties is located in
+            - ./backups:/app/backups-folder # Set this to where you want your backups to be in
         environment:
             RCON_HOST: "server"
             RCON_PORT: 25575
