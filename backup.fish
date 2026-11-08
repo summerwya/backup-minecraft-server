@@ -71,7 +71,7 @@ echo "Step 3: Creating 7zip Archive"
 
 cd $TEMP_BACKUP_FOLDER
 #REVIEW - I think the user should be able to set their own compression level, no...?
-7z a -t7z -m0=lzma2 -mx=9 -md=32m -mmt=on -mmemuse=800m -bsp1 "$DATE_NOW.7z" . # Use only 800mb of memory
+7z a -t7z -mx=9 -m0=lzma2 -mmemuse=7g "$DATE_NOW.7z" . # Use 7gb of memory, hot damn.
 # TODO - Add an option in compose to select whether to use 7z or tarball
 if test $status -ne 0
     echo -e "\tFATAL: Failed to create archive!" >&2
