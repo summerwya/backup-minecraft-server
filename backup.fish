@@ -39,7 +39,7 @@ else
 end
 
 docker -H host.docker.internal:2375 compose -p "$DOCKER_PROJECT_NAME" stop #REVIEW this takes EVERYTHING down. and apparently i should add -t 60 or sum
-if test $status -ne 0
+if test $status -ne 0 #REVIEW - It doesn't execute this when the project name doesn't exist
     echo -e "\tFATAL: Couldn't stop docker container(s)." >&2
     exit 1
 else

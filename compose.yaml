@@ -1,7 +1,7 @@
 services:
     backup:
-        container_name: mc-backup
-        # image: mc-backup/summerwya
+        container_name: backup-mc-server
+        image: summerwya/backup-mc-server
         build: .
         volumes:
             - ./mc-data:/app/data-folder:ro # this is the folder where server.properties is located in
@@ -14,14 +14,7 @@ services:
             DOCKER_PROJECT_NAME: "minecraft-server" # Get this from Docker Desktop, it should be the one that parents all of your services
         secrets:
             - rcon_password
-        networks:
-            - tunnel
 
 secrets:
     rcon_password:
         file: ./rcon_password.txt
-
-networks:
-    tunnel:
-        name: cloudflare-tunnel
-        external: true
