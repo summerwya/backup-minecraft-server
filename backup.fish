@@ -19,12 +19,12 @@ end
 
 # Test if the data folder and the backup folder actually exists
 if not test -d "$DATA_FOLDER"
-    echo "DATA_FOLDER doesn't exist" >&2
+    echo "\"$DATA_FOLDER\" (data folder) doesn't exist" >&2
     exit 1
 end
 
 if not test -d "$BACKUPS_FOLDER"
-    echo "BACKUPS_FOLDER doesn't exist!" >&2
+    echo "\"$BACKUPS_FOLDER\" (backups folder) doesn't exist!" >&2
     exit 1
 end
 #!SECTION
@@ -102,7 +102,7 @@ end
 echo "Step 4: Parity file creation"
 
 cd "$BACKUPS_FOLDER/$DATE_NOW"
-par2 c -r10 "$DATE_NOW.7z"
+par2 c -r10 -q "$DATE_NOW.7z"
 if test $status -ne 0
     echo -e "\tWARNING: Archive has no parity data. Failed to generate!" >&2
 else
