@@ -1,6 +1,6 @@
 #SECTION - Global variables and checks
 function restart_on_exit --on-event fish_exit
-    docker -H host.docker.internal:2375 compose -p "$DOCKER_PROJECT_NAME" start
+    docker -H host.docker.internal:2375 compose -p "$DOCKER_PROJECT_NAME" start "$DOCKER_SERVICES"
 end
 
 set RCON_PASSWORD (cat /run/secrets/rcon_password | string trim)
@@ -38,7 +38,7 @@ else
     echo -e "\tKicked Players with Message \"$RCON_BACKUP_MESSAGE\""
 end
 
-docker -H host.docker.internal:2375 compose -p "$DOCKER_PROJECT_NAME" stop $DOCKER_SERVICES #REVIEW this takes EVERYTHING down. and apparently i should add -t 60 or sum
+docker -H host.docker.internal:2375 compose -p "$DOCKER_PROJECT_NAME" stop "$DOCKER_SERVICES" #REVIEW this takes EVERYTHING down. and apparently i should add -t 60 or sum
 if test $status -ne 0 #REVIEW - It doesn't execute this when the project name doesn't exist
     echo -e "\tFATAL: Couldn't stop docker container(s)." >&2
     exit 1
@@ -78,7 +78,7 @@ if test $status -ne 0
     exit 1
 else
     echo -e "\tCreated 7zip archive"
-    docker -H host.docker.internal:2375 compose -p "$DOCKER_PROJECT_NAME" start $DOCKER_SERVICES  #REVIEW this takes EVERYTHING down.
+    docker -H host.docker.internal:2375 compose -p "$DOCKER_PROJECT_NAME" start "$DOCKER_SERVICES"  #REVIEW this takes EVERYTHING down.
 end
 
 mkdir "$BACKUPS_FOLDER/$DATE_NOW"
