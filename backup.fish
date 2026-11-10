@@ -83,7 +83,6 @@ if test $status -ne 0
     exit 1
 else
     echo -e "\tCreated 7zip archive"
-    docker -H host.docker.internal:2375 compose -p "$DOCKER_PROJECT_NAME" start $DOCKER_SERVICES  #REVIEW this takes EVERYTHING down.
 end
 
 mkdir "$BACKUPS_FOLDER/$DATE_NOW"
