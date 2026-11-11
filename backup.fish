@@ -1,4 +1,5 @@
 #SECTION - Global variables and checks
+#SECTION - Utility Functions
 # REVIEW - Rename to "start_docker_services" ?
 function restart_on_exit --on-event fish_exit
     if not test -z "$DOCKER_PROJECT_NAME"
@@ -64,6 +65,7 @@ function prune_old_backups --argument-names limit
         end
     end
 end
+#!SECTION
 
 # Folders
 set DATA_FOLDER "/app/data-folder"
@@ -116,6 +118,8 @@ end
 
 if test -z "$CREATE_PARITY_FILES"
     set -g CREATE_PARITY_FILES false
+else
+    set -g CREATE_PARITY_FILES (string lower -- $CREATE_PARITY_FILES)
 end
 #TODO - Parse docker service names
 #!SECTION
@@ -123,6 +127,7 @@ end
 
 #SECTION - Delay
 if not test -z "$RCON_HOST"
+    echo "RCON_HOST and BACKUP_DELAY defined... now waiting"
     rcon-cli --host "$RCON_HOST" --port "$RCON_PORT" --password "$RCON_PASSWORD" -- "say Server will be backed up after $BACKUP_DELAY. Please finish up with what you're doing!"
     if not test -z "$BACKUP_DELAY"
         sleep -- "$BACKUP_DELAY"
@@ -199,7 +204,7 @@ end
 #!SECTION
 
 #SECTION Step 3 Create parity files in archive's backup folder
-if set -l p (string lower -- "$CREATE_PARITY_FILES"); if test "$p" = true; and test "$BACKUP_TYPE" != "duplicate"
+if test "$CREATE_PARITY_FILES" = true && test "$BACKUP_TYPE" != "duplicate"
     echo "Step 3: Parity file creation"
 
     cd "$BACKUP_STORAGE_FOLDER"
