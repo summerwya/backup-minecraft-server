@@ -6,7 +6,7 @@ It's a simple fish shell script that I containerized with docker. It really just
 
 **THIS DOES NOT RUN AUTOMATICALLY, IT'S DESIGNED TO BE EXECUTED BY AN EXTERNAL SERVICE**
 
-> *Also, you can technically use this to backup anything...*
+> *Also, you can technically use this to backup anything... which is pretty funny 'cuz I only made this to backup a minecraft server*
 
 ## Configuration
 
@@ -16,10 +16,10 @@ These are the possible configurations you can do for your backup service (take [
 
 These are just used to inform people inside the minecraft server if a backup is going to happen or is happening.
 
-|Name|Required|Default Value|
-|---|---|---|
-|RCON_HOST|||
-|RCON_PORT||25575|
+|Name|Required|Default Value|Notes|
+|---|---|:-:|-
+|RCON_HOST|||When left blank, all efforts to broadcast messages to the server will be skipped
+|RCON_PORT||25575||
 
 ### Docker Configuration
 
@@ -28,8 +28,11 @@ These are optional, you can just run the backup service without needing to expos
 |Name|Required|Default Value|Notes
 |---|:---:|:-:|-|
 |DOCKER_DAEMON_ADDRESS||host.docker.internal:2375|You have to enable "expose docker daemon" in Docker Desktop
-|DOCKER_PROJECT_NAME|||This comes from Docker, the main container that contains containers. **WARNING: LEAVING THIS BLANK WILL NOT STOP ANY SERVERS AND THE BACKUP WILL STILL BE CREATED.**
+|DOCKER_PROJECT_NAME|||This comes from Docker, the main container that contains containers. **WARNING: DO NOT LEAVE THIS BLANK UNLESS YOU KNOW WHAT YOU'RE DOING.**
 |DOCKER_SERVICES|||Leaving this blank will shut down all services of the specified docker project|
+
+>**WARNING!**
+> - LEAVING `DOCKER_PROJECT_NAME` BLANK MAKES IT SO THAT THE BACKUP RUNS WITHOUT STOPPING ANYTHING. **WHICH LEADS TO POSSIBLE DATA LOSS AND CORRUPTION**
 
 ### Backup Configuration
 
@@ -101,8 +104,10 @@ The action of this step depends on the value of `BACKUP_TYPE`
 `7zip`/`tarball` backups will always be stored in this format:
 - Folder `2000-01-01-12-00` (YYYY-MM-DD-HH-MM)
   - File `2000-01-01-12-00.7z` or `2000-01-01-12-00.tar`
-  - (if `CREATE_PARITY_FILES` is `true`) Files `2000-01-01-12-00.7z.par2` or `2000-01-01-12-00.tar.par2`
-
+  - if `CREATE_PARITY_FILES` is `true`, it will also have these files:
+    - Files `2000-01-01-12-00.7z.par2` or `2000-01-01-12-00.tar.par2`
+    - Files `2000-01-01-12-00.7z.volXXX+XX.par2` or `2000-01-01-12-00.tar.volXXX+XX.par2`
+    
 `duplicate` backups will look like this:
 - Folder `2000-01-01-12-00` (YYYY-MM-DD-HH-MM)
   - File `server.properties`
