@@ -28,7 +28,7 @@ These are optional, you can just run the backup service without needing to expos
 |Name|Required|Default Value|Notes
 |---|:---:|:-:|-|
 |DOCKER_DAEMON_ADDRESS||host.docker.internal:2375|You have to enable "expose docker daemon" in Docker Desktop
-|DOCKER_PROJECT_NAME|||This comes from Docker, the main container that contains containers. **WARNING: DO NOT LEAVE THIS BLANK UNLESS YOU KNOW WHAT YOU'RE DOING.**
+|DOCKER_PROJECT_NAME|||This comes from Docker, the compose project name that contains containers. **WARNING: DO NOT LEAVE THIS BLANK UNLESS YOU KNOW WHAT YOU'RE DOING.**
 |DOCKER_SERVICES|||Leaving this blank will shut down all services of the specified docker project|
 
 >**WARNING!**

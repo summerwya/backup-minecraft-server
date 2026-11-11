@@ -7,16 +7,16 @@ services:
             - ./mc-data:/app/data-folder:ro
             - ./backups:/app/backups-folder
         environment:
-            # You must configure your server to have rcon if you want messages to work
-            RCON_HOST: "main" # leave blank for no message
-            # RCON_PORT: 25575 # Excluded because it already defaults to 25575
+            # RCON Configuration - Optional, can be left out if you don't want to warn players of backups
+            RCON_HOST: "main" # Where your RCON host is
+            # RCON_PORT: 25575 # Uncomment if you have a different port for RCON
             
-            # Enter your docker container information here
-            # DOCKER_DAEMON_ADDRESS: host.docker.internal:2375 # excluded because it's already the default
+            # Docker Configuration
+            # DOCKER_DAEMON_ADDRESS: host.docker.internal:2375 # Uncomment and replace if the docker daemon is hosted elsewhere
             DOCKER_PROJECT_NAME: "minecraft-server"
             DOCKER_SERVICES: "main"
             
-            # Backup options
+            # Backup Configuration
             # BACKUP_TYPE: "tarball" # Please check README.md for backup types, tarball is the default already
             BACKUP_DELAY: "5m" # broadcast a message to all active players 5 minutes before the backup
             BACKUP_KICK_MESSAGE: "Performing Automated Server Backup - Please rejoin after 5 minutes or so"
