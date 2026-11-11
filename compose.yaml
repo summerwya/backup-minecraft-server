@@ -1,18 +1,27 @@
+# Example of what your backup service should look like
+
 services:
     backup:
-        container_name: backup-mc-server
         image: summerwya/backup-mc-server
-        build: .
         volumes:
-            - ./mc-data:/app/data-folder:ro # this is the folder where server.properties is located in
-            - ./backups:/app/backups-folder # Set this to where you want your backups to be in
+            - ./mc-data:/app/data-folder:ro
+            - ./backups:/app/backups-folder
         environment:
-            RCON_HOST: "server"
-            RCON_PORT: 25575
-            RCON_BACKUP_MESSAGE: "Performing Automated Server Backup - Please rejoin after 5 minutes or so"
+            # You must configure your server to have rcon if you want messages to work
+            RCON_HOST: "main" # leave blank for no message
+            # RCON_PORT: 25575 # Excluded because it already defaults to 25575
             
-            DOCKER_PROJECT_NAME: "minecraft-server" # Get this from Docker Desktop, it should be the one that parents all of your services
-            DOCKER_SERVICES: "" # separated by spaces, which docker services to stop, leave blank for all
+            # Enter your docker container information here
+            # DOCKER_DAEMON_ADDRESS: host.docker.internal:2375 # excluded because it's already the default
+            DOCKER_PROJECT_NAME: "minecraft-server"
+            DOCKER_SERVICES: "main"
+            
+            # Backup options
+            # BACKUP_TYPE: "tarball" # Please check README.md for backup types, tarball is the default already
+            BACKUP_DELAY: "5m" # broadcast a message to all active players 5 minutes before the backup
+            BACKUP_KICK_MESSAGE: "Performing Automated Server Backup - Please rejoin after 5 minutes or so"
+            BACKUP_LIMIT: "day" # Please check README.md for limit types
+            # CREATE_PARITY_FILES: TRUE # Uncomment if you want parity files to repair bitrot in the future
         secrets:
             - rcon_password
 
